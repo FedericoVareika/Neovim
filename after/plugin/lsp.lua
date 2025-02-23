@@ -79,7 +79,7 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
 
 require('mason').setup()
 require('mason-lspconfig').setup({
-    ensure_installed = { 'clangd', 'rust_analyzer', },
+    ensure_installed = { 'clangd', 'rust_analyzer', 'ols' },
     handlers = {
         function(server_name)
             require("lspconfig")[server_name].setup {}
@@ -88,7 +88,7 @@ require('mason-lspconfig').setup({
         ["clangd"] = function()
             require('lspconfig').clangd.setup {
                 cmd = {
-                    "/opt/homebrew/opt/llvm/bin/clangd",
+                    "/usr/bin/clangd",
                     "--background-index",
                     "--pch-storage=memory",
                     "--all-scopes-completion",
@@ -107,6 +107,29 @@ require('mason-lspconfig').setup({
             }
         end,
 
+        ["ols"] = function()
+            require('lspconfig').ols.setup {
+                filetypes = { "odin" },
+            }
+        end,
+
         lsp.default_setup,
     },
+})
+
+require('lspconfig').ada_ls.setup {
+    cmd = { 'ada_language_server' },
+    filetypes = { 'ada' },
+    root_dir = require('lspconfig').util.root_pattern('Makefile', '.git', '*.gpr', '*.adc'),
+}
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "ada",
+    callback = function()
+        -- Unmap specific insert-mode mappings for Ada files
+        vim.api.nvim_buf_del_keymap(0, "i", "<Space>aj")
+        vim.api.nvim_buf_del_keymap(0, "i", "<Space>al")
+        vim.api.nvim_buf_del_keymap(0, "n", "<Space>aj")
+        vim.api.nvim_buf_del_keymap(0, "n", "<Space>al")
+    end,
 })

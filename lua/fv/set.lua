@@ -27,3 +27,22 @@ vim.opt.isfname:append("@-@")
 vim.opt.updatetime = 50
 
 vim.opt.colorcolumn = "80"
+
+vim.api.nvim_create_augroup("GLSL", { clear = true })
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+    pattern = { ".vs", ".fs", ".vert", ".frag" },
+    group = "GLSL",
+    callback = function()
+        vim.opt.ft = "glsl"
+    end,
+})
+
+vim.api.nvim_create_augroup("OdinMake", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "odin",
+    group = "OdinMake",
+    callback = function()
+        vim.opt.makeprg = "odin build ."
+        vim.opt.errorformat = "%f(%l:%c) %m"
+    end,
+})

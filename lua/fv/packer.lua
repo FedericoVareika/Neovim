@@ -7,11 +7,14 @@ return require('packer').startup(function(use)
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.5',
         -- or                            , branch = '0.1.x',
-        requires = { { 'nvim-lua/plenary.nvim' } }
+        requires = {
+            { 'nvim-lua/plenary.nvim' },
+            { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
+        }
     }
 
     -- gruvbox
-    use ({
+    use({
         "ellisonleao/gruvbox.nvim",
         as = "gruvbox",
         config = function()
@@ -27,7 +30,7 @@ return require('packer').startup(function(use)
     --         vim.cmd("colorscheme onedark")
     --     end
     -- })
-    use ({
+    use({
         "blazkowolf/gruber-darker.nvim",
         as = "gruber-darker",
         -- config = function()
@@ -83,34 +86,43 @@ return require('packer').startup(function(use)
 
     use('tpope/vim-commentary')
 
-    -- use {
-    --     "windwp/nvim-autopairs",
-    --     config = function() require("nvim-autopairs").setup {} end
-    -- }
+    use {
+        --     "windwp/nvim-autopairs",
+        --     config = function() require("nvim-autopairs").setup {} end
+        "windwp/nvim-ts-autotag",
+        -- config = function() require("nvim-ts-autotag").setup {} end
+    }
 
-    use ("davidmh/cmp-nerdfonts")
+    use("davidmh/cmp-nerdfonts")
 
     use("lervag/vimtex")
 
-    use ("nvim-tree/nvim-web-devicons")
+    use("nvim-tree/nvim-web-devicons")
     use {
         "OXY2DEV/markview.nvim",
         requires = {
-            {"nvim-tree/nvim-web-devicons"}
+            { "nvim-tree/nvim-web-devicons" }
         }
     }
 
     use {
         "mfussenegger/nvim-dap",
         requires = {
-            {"nvim-neotest/nvim-nio"},
-            {"rcarriga/nvim-dap-ui"},
+            { "nvim-neotest/nvim-nio" },
+            { "rcarriga/nvim-dap-ui" },
             {
                 "julianolf/nvim-dap-lldb",
                 opts = { codelldb_path = "/usr/bin/lldb" }
             },
-            {"theHamsta/nvim-dap-virtual-text"},
+            { "theHamsta/nvim-dap-virtual-text" },
 
         }
     }
+    use {
+        'Fymyte/rasi.vim',
+        ft = 'rasi',
+    }
+
+    use("tikhomirov/vim-glsl")
+
 end)
