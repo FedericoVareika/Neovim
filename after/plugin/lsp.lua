@@ -79,7 +79,7 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
 
 require('mason').setup()
 require('mason-lspconfig').setup({
-    ensure_installed = { 'clangd', 'rust_analyzer', 'ols' },
+    ensure_installed = { 'clangd', 'rust_analyzer', 'ols', 'hls' },
     handlers = {
         function(server_name)
             require("lspconfig")[server_name].setup {}
@@ -110,6 +110,12 @@ require('mason-lspconfig').setup({
         ["ols"] = function()
             require('lspconfig').ols.setup {
                 filetypes = { "odin" },
+            }
+        end,
+
+        ["hls"] = function()
+            require('lspconfig').hls.setup {
+                filetypes = { 'haskell', 'lhaskell', 'cabal' },
             }
         end,
 
