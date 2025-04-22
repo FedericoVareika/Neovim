@@ -9,11 +9,11 @@ return {
 
     {
         'nvim-telescope/telescope.nvim',
-        version = "0.1.*",
+        version = "0.1.8",
         -- or                            , branch = '0.1.x',
         dependencies = {
             { 'nvim-lua/plenary.nvim' },
-            { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
+            { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
         }
     },
 
@@ -27,9 +27,6 @@ return {
     {
         'nvim-treesitter/nvim-treesitter',
         build = ':TSUpdate',
-        config = {
-            auto_install = true
-        }
     },
 
     {
@@ -44,7 +41,8 @@ return {
     'tpope/vim-commentary',
 
     'LuaLS/lua-language-server',
-    { "Hoffs/omnisharp-extended-lsp.nvim", lazy = true },
+    { 'razzmatazz/csharp-language-server', lazy = true },
+    -- { "Hoffs/omnisharp-extended-lsp.nvim", lazy = true },
 
     {
         'saghen/blink.cmp',

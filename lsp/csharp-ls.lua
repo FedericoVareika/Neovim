@@ -1,5 +1,5 @@
 --@type vim.lsp.Config
 return {
-    cmd = { 'omnisharp_extended' },
+    cmd = { 'csharp-ls' },
     filetypes = { 'cs' },
 }

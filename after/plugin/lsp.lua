@@ -23,4 +23,5 @@ vim.lsp.config("*", {
 })
 
 vim.lsp.enable("lua_ls")
-vim.lsp.enable("omnisharp_extended")
+-- vim.lsp.enable("omnisharp_extended")
+vim.lsp.enable("csharp-ls")
