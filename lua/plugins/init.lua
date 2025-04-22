@@ -41,7 +41,7 @@ return {
     'tpope/vim-commentary',
 
     'LuaLS/lua-language-server',
-    { 'razzmatazz/csharp-language-server', lazy = true },
+    -- { 'razzmatazz/csharp-language-server', lazy = true },
     -- { "Hoffs/omnisharp-extended-lsp.nvim", lazy = true },
 
     {
