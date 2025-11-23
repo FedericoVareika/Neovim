@@ -15,6 +15,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
         vim.keymap.set("n", "<leader>K", function() vim.lsp.buf.signature_help() end, opts)
 
         vim.keymap.set("n", "<leader>ds", function() require('telescope.builtin').lsp_document_symbols() end, opts)
+        vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
     end
 })
 
@@ -23,5 +24,12 @@ vim.lsp.config("*", {
 })
 
 vim.lsp.enable("lua_ls")
--- vim.lsp.enable("omnisharp_extended")
-vim.lsp.enable("csharp-ls")
+vim.lsp.enable("hls")
+vim.lsp.enable("zls")
+vim.lsp.enable("texlab")
+vim.lsp.enable("ols")
+vim.lsp.enable("angular-ls")
+vim.lsp.enable("vtsls")
+
+vim.lsp.enable("csls")
+vim.lsp.enable("protols")

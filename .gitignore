@@ -1,0 +1,34 @@
+# --- Neovim Downloads & Binaries (From your list) ---
+# You downloaded and extracted neovim inside your config folder;
+# these should not be committed.
+nvim-linux-x86_64/
+nvim-linux-x86_64.tar.gz
+
+# --- Standard Vim/Neovim Artifacts ---
+# Swap files
+*.swp
+*.swo
+# Backup files (if you have them enabled)
+*~
+# Netrw history
+.netrwhist
+# Session files
+Session.vim
+
+# --- Plugin Manager Artifacts ---
+# You have a 'packer.lua' file. If you ever run Packer, 
+# it might generate this file, which should be ignored.
+plugin/packer_compiled.lua
+
+# Note: Keep 'lazy-lock.json'. It ensures your plugins 
+# stay at the same version across different machines.
+
+# --- OS System Files ---
+.DS_Store
+Thumbs.db
+
+# --- Miscellaneous ---
+# You listed a .config/ folder inside your nvim/ folder.
+# If this was created by a tool and not you, ignore it.
+# If you store secrets here, definitely ignore it.
+.config/

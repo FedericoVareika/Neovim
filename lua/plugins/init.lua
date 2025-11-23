@@ -50,9 +50,9 @@ return {
         dependencies = { 'rafamadriz/friendly-snippets' },
 
         -- use a release tag to download pre-built binaries
-        version = '1.*',
+        -- version = '1.*',
         -- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
-        -- build = 'cargo build --release',
+        build = 'cargo +nightly build --release',
         -- If you use nix, you can build from source using latest nightly rust with:
         -- build = 'nix run .#build-plugin',
 
@@ -100,4 +100,40 @@ return {
 
 
     'tikhomirov/vim-glsl',
+
+    'ThePrimeagen/vim-be-good',
+
+    -- {
+    --     'williamboman/mason.nvim',
+    --     'mason-org/mason-registry',
+    -- },
+
+    -- {
+    --     "seblyng/roslyn.nvim",
+    --     ft = { "cs", "razor" },
+    --     dependencies = {
+    --         {
+    --             -- By loading as a dependencies, we ensure that we are available to set
+    --             -- the handlers for Roslyn.
+    --             "tris203/rzls.nvim",
+    --             config = true,
+    --         },
+    --     },
+    --     init = function()
+    --         -- We add the Razor file types before the plugin loads.
+    --         vim.filetype.add({
+    --             extension = {
+    --                 razor = "razor",
+    --                 cshtml = "razor",
+    --             },
+    --         })
+    --     end,
+    --     -- lazy = true,
+    -- },
+
+    -- {
+    --   'mrcjkb/haskell-tools.nvim',
+    --   version = '^5', -- Recommended
+    --   lazy = false, -- This plugin is already lazy
+    -- }
 }
