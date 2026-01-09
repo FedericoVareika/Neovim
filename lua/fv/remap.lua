@@ -48,6 +48,9 @@ vim.keymap.set("n", "<leader>pe", function()
     if extension == 'c' then
         -- If the current file is a .c file, attempt to open the corresponding .h file
         vim.cmd("e %:r.h")
+    elseif extension == 'h' then
+        -- If the current file is a .c file, attempt to open the corresponding .h file
+        vim.cmd("e %:r.c")
     elseif extension == 'vert' then
         vim.cmd("e %:r.frag")
     elseif extension == 'frag' then

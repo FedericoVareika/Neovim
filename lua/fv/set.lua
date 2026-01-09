@@ -46,3 +46,25 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.opt.errorformat = "%f(%l:%c) %m"
     end,
 })
+
+vim.api.nvim_create_augroup("C", { clear = true })
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+    pattern = { ".c", ".h" },
+    group = "GLSL",
+    callback = function()
+        vim.opt.makeprg = "./build.sh"
+    end,
+})
+
+local todo_group = vim.api.nvim_create_augroup("CustomTodoMatches", { clear = true })
+
+vim.api.nvim_create_autocmd({ "VimEnter", "WinEnter", "BufEnter" }, {
+  group = todo_group,
+  callback = function()
+    vim.api.nvim_set_hl(0, "MyTodoColor", { fg = "#aa0000", bold = true })
+    vim.fn.matchadd("MyTodoColor", "TODO")
+
+    vim.api.nvim_set_hl(0, "MyNoteColor", { fg = "#00aa00", bold = true })
+    vim.fn.matchadd("MyNoteColor", "NOTE")
+  end,
+})

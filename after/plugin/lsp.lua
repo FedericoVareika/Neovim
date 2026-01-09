@@ -33,3 +33,5 @@ vim.lsp.enable("vtsls")
 
 vim.lsp.enable("csls")
 vim.lsp.enable("protols")
+
+vim.lsp.enable("clangd")
