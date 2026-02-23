@@ -66,5 +66,8 @@ vim.api.nvim_create_autocmd({ "VimEnter", "WinEnter", "BufEnter" }, {
 
     vim.api.nvim_set_hl(0, "MyNoteColor", { fg = "#00aa00", bold = true })
     vim.fn.matchadd("MyNoteColor", "NOTE")
+
+    vim.api.nvim_set_hl(0, "MyStudyColor", { fg = "#aaaa00", bold = true })
+    vim.fn.matchadd("MyStudyColor", "STUDY")
   end,
 })
