@@ -30,12 +30,14 @@ vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
 vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 
 
-vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+vim.keymap.set("n", "<leader>r", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 -- vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
 vim.keymap.set("n", "<leader><leader>", function()
     vim.cmd("so")
 end)
+
+vim.keymap.set('n', '<leader>b', '<cmd>make<CR>')
 
 -- Switch between header and c files
 vim.keymap.set("n", "<leader>pe", function()
@@ -93,6 +95,13 @@ vim.opt.updatetime = 50
 
 vim.opt.colorcolumn = "80"
 
+vim.opt.autocomplete = false
+
+vim.cmd.colorscheme("retrobox")
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
 local todo_group = vim.api.nvim_create_augroup("CustomTodoMatches", { clear = true })
 
 vim.api.nvim_create_autocmd({ "VimEnter", "WinEnter", "BufEnter" }, {
@@ -109,7 +118,8 @@ vim.api.nvim_create_autocmd({ "VimEnter", "WinEnter", "BufEnter" }, {
   end,
 })
 
-vim.cmd.colorscheme("retrobox")
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 vim.pack.add {
     "https://github.com/neovim/nvim-lspconfig",
@@ -117,15 +127,31 @@ vim.pack.add {
     "https://github.com/nvim-tree/nvim-web-devicons",
     "https://github.com/nvim-lua/plenary.nvim",
     "https://github.com/nvim-telescope/telescope.nvim",
+    "https://github.com/nvim-treesitter/nvim-treesitter",
+    {
+        src = "https://github.com/ThePrimeagen/harpoon",
+        version = "harpoon2",
+    },
+    -- "https://github.com/hrsh7th/nvim-cmp",
+    "https://github.com/tpope/vim-abolish",
+    "https://github.com/nvim-mini/mini.align",
 }
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+require("mini.align").setup({})
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 require("oil").setup({
     columns = {
-        "icon", 
-        "permissions", 
-        "size", 
+        "icon",
+        "permissions",
+        "size",
         "mtime",
-    }, 
+    },
 
     skip_confirm_for_simple_edits = true,
 
@@ -136,7 +162,20 @@ require("oil").setup({
 
 vim.keymap.set("n", "<leader>pv", vim.cmd.Oil)
 
-vim.lsp.enable("clangd")
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+vim.lsp.config("clangd", {
+    on_attach = function(client, bufnr)
+        vim.bo[bufnr].makeprg = "./build.sh"
+        vim.keymap.set('n', '<leader>b', '<cmd>make<CR>', { buffer = bufnr, desc = "Run build.sh" })
+        client.server_capabilities.semanticTokensProvider = nil
+        vim.diagnostic.enable(false, { bufnr = bufnr })
+    end,
+})
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 require('telescope').setup {
   defaults = {
@@ -165,3 +204,93 @@ local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>pf', builtin.find_files, {})
 vim.keymap.set('n', '<C-p>', builtin.git_files, {})
 vim.keymap.set('n', '<leader>ps', builtin.live_grep, {})
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'TelescopePrompt',
+  callback = function()
+    vim.opt_local.autocomplete = false
+  end,
+})
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+local harpoon = require("harpoon")
+
+-- REQUIRED
+harpoon:setup()
+-- REQUIRED
+
+vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
+vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+
+vim.keymap.set("n", "<leader>h", function() harpoon:list():select(1) end)
+vim.keymap.set("n", "<leader>t", function() harpoon:list():select(2) end)
+vim.keymap.set("n", "<leader>n", function() harpoon:list():select(3) end)
+vim.keymap.set("n", "<leader>s", function() harpoon:list():select(4) end)
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+-- LSP 
+vim.keymap.set("n", "<leader>e", function()
+     vim.diagnostic.open_float(nil, { focus = false })
+   end
+)
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+require("nvim-treesitter").setup({
+  ensure_installed = { "c", "cpp", "lua", "python" },
+  auto_install = true,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'c', 'cpp', 'lua', 'python' },
+  callback = function()
+    vim.treesitter.start()
+  end,
+})
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'c', 'cpp', 'h', 'hpp' },
+  callback = function(ev)
+        vim.bo[ev.buf].makeprg = "./build.sh"
+  end
+})
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+-- Automatically insert include guards for empty C header files
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufReadPost" }, {
+  pattern = "*.h",
+  group = vim.api.nvim_create_augroup("CHeaderGuards", { clear = true }),
+  callback = function(args)
+    -- Ensure the buffer is completely empty before inserting
+    if vim.api.nvim_buf_line_count(args.buf) == 1 and vim.api.nvim_buf_get_lines(args.buf, 0, 1, false)[1] == "" then
+      -- Get filename tail (e.g., "vector_index.h") and transform to "VECTOR_INDEX_H"
+      local filename = vim.fn.expand("%:t")
+      local guard = filename:upper():gsub("[^A-Z0-9]", "_")
+
+      local lines = {
+        "#ifndef " .. guard,
+        "#define " .. guard,
+        "",
+        "",
+        "",
+        "#endif // " .. guard,
+      }
+
+      vim.api.nvim_buf_set_lines(args.buf, 0, -1, false, lines)
+      
+      -- Place cursor on line 4 (in the empty space between #define and #endif)
+      vim.api.nvim_win_set_cursor(0, { 4, 0 })
+    end
+  end,
+})
+

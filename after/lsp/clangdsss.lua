@@ -28,7 +28,7 @@ return {
     end,
     handlers = {
         -- This overwrites the handler that draws errors with an empty function
-        ["textDocument/publishDiagnostics"] = function() end
+        -- ["textDocument/publishDiagnostics"] = function() end
     }
 }
 
